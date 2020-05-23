@@ -50,7 +50,7 @@ c=1
 #bucle generador de los silencios a tiempos configurados
 while not not binary:
     if (c==0):
-        if (binary[0]==0):
+        if (binary[0]=='0'):
             samplerSilence=samplerSilence0
         else:
             samplerSilence=samplerSilence1
