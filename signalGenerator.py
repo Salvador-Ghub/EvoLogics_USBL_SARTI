@@ -145,4 +145,4 @@ plt.tight_layout()
 figManager = plt.get_current_fig_manager()
 figManager.full_screen_toggle
   
-   
+np.savetxt('testpy.dat',signal1)    
