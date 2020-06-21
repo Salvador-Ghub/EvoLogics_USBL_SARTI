@@ -39,8 +39,7 @@ s1=surf(x*r,y*r,z*r);
 %hold on 
 %s2=surf(x*a(2,4),y*a(2,4),z*a(2,4)); 
 %s3=surf(x*a(3,4)+a(3,1),y*a(3,4)+a(3,2),z*a(3,4)+a(3,3)); 
- 
-%daspect([1 1 1]) 
+
 
 
 PosTag=[5 1 0]*3
