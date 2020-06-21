@@ -1,0 +1,91 @@
+
+clear all;
+tic
+freq=69*4;%kHz frecuencia de emisión, superior al teorema de Nyquist
+freqSin=69;%kHz frecuencia de señal sinusoidal
+npul=8;%número de pulsos a generar
+tpul=0.050;%segundos de duración del pulso
+tsep=0.200;%segundos de separación entre tren de pulsos
+tarray=[296 424 362 381 378 387 338]/1000;%id en s de duración 
+binary=[];%guardará el número de pulsos codificado en binario
+signalC=[];%guardará la señal cuadrada a la frecuencia indicada
+a='1';
+a1=1;%amplitud señal sinusoidal
+
+%%generador de codigo binario 
+for i=1:npul*2
+    if i<npul*2 %evitamos que el último cero sea aplicado
+    binary=[binary a];
+    if a=='1'
+        a='0';
+    else
+        a='1';
+    end
+    end
+end
+%%generador de codigo binario 
+
+%generador de vector en samplers
+tsampler=1/(1000*freq);%tiempo en segundos por cada muestra
+nsamplere=tpul/tsampler;%número de sampler por escalón 0 o 1
+nsamplers=tsep/tsampler;%número de sampler por silencio
+
+while(not(isempty(binary)))
+  if binary(1)=='0'%solamente aplicamos la separación predeterminada a los valores de 0
+      t=tarray(1);
+      tarray(1)=[];
+  else
+      t=tpul;
+  end
+  
+  for i=0:tsampler:t
+   if binary(1)=='1'
+       signalC=[signalC 1];
+   else
+       signalC=[signalC 0];
+   end
+  end    
+  binary(1)=[];%elimina el primer valor de la señal para pasar al siguiente
+  
+end
+for i=0:tsampler:tsep
+    signalC=[signalC 0];
+end
+%%generador de vector en samplers cuadrada+separación
+
+%%generador señal sinusoidal
+f1 = 2*pi*freqSin*1000;%[rad]
+Ts = tsampler;% [s]
+
+t = 0 : Ts : (length(signalC)*tsampler);% Time vector 
+t(length(t))=[];
+radT=f1*t;%producto del vector tiempo por el valor en radianes
+signal = a1 * sin(radT);
+
+%%generador señal sinusoidal
+
+%%multiplicación de señal cuadrada por señal sinusoidal
+signal1 = a1 * sin(radT.*signalC);
+signal1 = signal1';
+toc
+%%multiplicación de señal cuadrada por señal sinusoidal
+save('C:\Users\Salvador\Desktop\TFM\Ubuntu\Examples\signalTest.dat','signal1','-ascii');
+figure();
+
+subplot(3,1,1);
+plot(t, signal);
+ylim([-1.5 1.5]);
+xlabel('t [s]') 
+ylabel('Amplitud') 
+
+subplot(3,1,2);
+plot(t, signalC);
+ylim([-1.5 1.5]);
+xlabel('t [s]') 
+ylabel('Amplitud') 
+
+subplot(3,1,3);
+plot(t, signal1);
+ylim([-1.5 1.5]);
+xlabel('t [s]') 
+ylabel('Amplitud') 
